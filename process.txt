@@ -1,0 +1,16 @@
+准备工作：
+1\ git init
+2\ 创建前端npm create vite@latest frontend --template react, 选js
+3\ npm install, npm run dev跑前端
+4\去后端server.js, npm init
+5\后端安装express, nodemon -D,把node modules gitignore了
+6\试着编辑并启动server(如果端口被占用：lsof -i tcp:端口号，kill -9 id号)
+
+初始化react：
+7\把src/app.jsx初始化，导入只保留app.css，return换成hello world
+8\删除react.svg
+
+创建远程仓库
+7\git上new repository，description里写所需技术站
+8\git add .
+9\git commit -m "提交理由"
