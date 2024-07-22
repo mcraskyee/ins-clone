@@ -44,4 +44,5 @@ profile下面再创建profile-info，profile-posts，把profile里的函数copy�
 写好样式
 在jsx中导入样式，把标签全部替换成元素的名字
 (所有需要的本地图片都要导入)
+链接可以用react router dom 里的link（to）和useNavigate()
 
