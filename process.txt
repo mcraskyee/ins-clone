@@ -11,6 +11,37 @@
 8\删除react.svg
 
 创建远程仓库
-7\git上new repository，description里写所需技术站
+7\git上new repository，description里写所需技术站,不要关闭跳转页面
 8\git add .
 9\git commit -m "提交理由"
+10\git status检查一下提交状态
+11\git log检查你传上去了什么
+12\按照git页面提示的命令git remote链接
+13\git remote -v检查是不是连上了
+14\git push -u origin master上传
+
+
+
+前端个人主页部分
+安装styled-components（样式库）, react-dom, react-router-dom（前端路由）
+导入react router dom,包括BrowserRouter as Router,Route,Routes,Navigate
+src中创建component，
+每个上述文件夹里都有jsx, styles.js文件
+初始化每个的时候可以在jsx中先加入一个return和文件名用于标记, 然后在app.js中导入
+在app.js中以层次，把browser-router，routes，route的标签搭好，路径填好
+去浏览器输入一下相应路径，看能不能看到相应内容
+profile下面再创建profile-info，profile-posts，把profile里的函数copy进去，改一下名字
+在styles.js中写css, 在jsx中导入，把标签名换成组件名
+显示不同人的不同id，用useParams
+在redux里放一些假数据用于测试
+
+
+注册页
+创建文件夹，创建好jsx和styles.js
+在jsx中写好导入导出
+在app.js中挂载路由
+在样式文件中导入style components（样式库）
+写好样式
+在jsx中导入样式，把标签全部替换成元素的名字
+(所有需要的本地图片都要导入)
+
