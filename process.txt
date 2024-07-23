@@ -45,4 +45,27 @@ profile下面再创建profile-info，profile-posts，把profile里的函数copy�
 在jsx中导入样式，把标签全部替换成元素的名字
 (所有需要的本地图片都要导入)
 链接可以用react router dom 里的link（to）和useNavigate()
+先写布局，再写逻辑
+
+
+后端
+安装mongoose, config, cors, jsonwebtoken, bcrypt
+创建路由文件夹，写相应的路由，导入express和router
+创建controller文件夹写call back function，写里面具体的函数
+创建config文件夹，写数据库
+先在路由文件中写路由并导出，把路由导入并挂到server上
+回到路由文件中，把路由路径挂在路由上，只留api名在这里
+回到controller中写具体的api函数，导出，在同名路由中导入
+（server挂routes文件名，routes文件挂api函数名）
+在api函数中把try catch架构搭好
+写api的时候，一般需要先定义并拿到req.body，去server中路由前解析json,写好后去postman测试
+路由前导入cors
+
+数据库
+连数据库，在defaul.json里写mongo链接(atlas=>connect=>compass)，
+在链接后加上项目名，把密码改成自己密码
+在db.json里把mongoose和config导入，链接mongo链接，写链接函数，导出，挂到server上
+把server和数据库跑起来
+新增model文件夹，创建user.js，在里面制定数据库schema，导出
+在controller中把数据库schema, bcrypt, jsonwebtoken导入
 
