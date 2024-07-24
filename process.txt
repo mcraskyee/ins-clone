@@ -50,6 +50,7 @@ profile下面再创建profile-info，profile-posts，把profile里的函数copy�
 
 后端
 安装mongoose, config, cors, jsonwebtoken, bcrypt
+路由前导入cors
 创建路由文件夹，写相应的路由，导入express和router
 创建controller文件夹写call back function，写里面具体的函数
 创建config文件夹，写数据库
@@ -59,7 +60,7 @@ profile下面再创建profile-info，profile-posts，把profile里的函数copy�
 （server挂routes文件名，routes文件挂api函数名）
 在api函数中把try catch架构搭好
 写api的时候，一般需要先定义并拿到req.body，去server中路由前解析json,写好后去postman测试
-路由前导入cors
+然后再用axios和前端互动
 
 数据库
 连数据库，在defaul.json里写mongo链接(atlas=>connect=>compass)，
