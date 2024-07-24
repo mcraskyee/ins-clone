@@ -23,7 +23,7 @@
 
 
 前端个人主页部分
-安装styled-components（样式库）, react-dom, react-router-dom（前端路由）
+安装styled-components（样式库）, react-dom, react-router-dom（前端路由）, axios
 导入react router dom,包括BrowserRouter as Router,Route,Routes,Navigate
 src中创建component，
 每个上述文件夹里都有jsx, styles.js文件

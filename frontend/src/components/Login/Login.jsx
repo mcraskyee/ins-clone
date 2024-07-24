@@ -10,6 +10,8 @@ import {
 } from "./Login.styles";
 import instagram from "../../assets/images/instagram-logo.png";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { setAuthToken } from "../../api.config";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ const Login = () => {
   //e.target.value就是input里面的值，就是key的值
   //再用setFormData来更新formData
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault(); //阻止默认自动跳转，不写formData弹一下就没了
     console.log("formData", formData);
 
@@ -39,10 +41,19 @@ const Login = () => {
       setError(`${unFiledFields.join(", ")} cannot be empty`);
       return;
     }
-    console.log("ready to login");
-    //如果unFieldFields里有值，就会显示setError里面的内容，否则显示成功注册
-    navigate("/home");
-    //跳转到home页面
+
+    //从后端获取数据，如果成功，跳转到home页面，如果失败，显示error message
+    try {
+      const url = "http://localhost:8000/api/auth/login";
+      const response = await axios.post(url, formData);
+      console.log("response", response.data); //返回token, userID
+      setAuthToken(response.data.token); //设置token
+      setFormData({ username: "", password: "" }); //清空formData
+      navigate("/home"); //跳转到home页面
+    } catch (error) {
+      console.log("error logging in user", error.response.data);
+      setError(error.response.data.message);
+    }
   };
 
   return (
