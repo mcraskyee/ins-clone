@@ -6,12 +6,14 @@ import { NavBar, InputField, OtherIcons } from "./Navbar.styles";
 import { Link, useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [dropdownState, setDropdownState] = useState(false); //一开始不显示dropdown
   const searchValue = useRef();
-  const userID = "Ben";
+  const userID = useSelector((state) => state.user.userID); //获取userID
+  console.log("userID", userID);
 
   const handleSubmit = (e) => {
     e.preventDefault();

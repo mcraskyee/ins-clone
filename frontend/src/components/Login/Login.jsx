@@ -12,8 +12,11 @@ import instagram from "../../assets/images/instagram-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { setAuthToken } from "../../api.config";
+import { useDispatch } from "react-redux";
+import { saveUserID } from "../../Redux/UserData";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: "",
@@ -48,6 +51,7 @@ const Login = () => {
       const response = await axios.post(url, formData);
       console.log("response", response.data); //返回token, userID
       setAuthToken(response.data.token); //设置token
+      dispatch(saveUserID(response.data.userID)); //保存userID
       setFormData({ username: "", password: "" }); //清空formData
       navigate("/home"); //跳转到home页面
     } catch (error) {

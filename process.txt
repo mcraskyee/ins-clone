@@ -23,7 +23,8 @@
 
 
 前端个人主页部分
-安装styled-components（样式库）, react-dom, react-router-dom（前端路由）, axios
+安装styled-components（样式库）, react-dom, react-router-dom（前端路由）, axios, @reduxjs/toolkit, react-redux
+(redux：为了任何组件之间都能打破等级传输数据)
 导入react router dom,包括BrowserRouter as Router,Route,Routes,Navigate
 src中创建component，
 每个上述文件夹里都有jsx, styles.js文件
@@ -70,3 +71,7 @@ profile下面再创建profile-info，profile-posts，把profile里的函数copy�
 新增model文件夹，创建user.js，在里面制定数据库schema，导出
 在controller中把数据库schema, bcrypt, jsonwebtoken导入
 
+改写redux
+在redux文件夹中的store.js和userdata中配置redux
+到main.js中,从react-redux中导入Provider，把App包裹在provider里
+把store挂在provider上
