@@ -11,7 +11,7 @@ import {
 import instagram from "../../assets/images/instagram-logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { setAuthToken } from "../../api.config";
+import { setAuthToken } from "../../apiConfig";
 import { useDispatch } from "react-redux";
 import { saveUserID } from "../../Redux/UserData";
 

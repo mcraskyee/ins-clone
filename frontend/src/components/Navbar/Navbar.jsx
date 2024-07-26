@@ -77,7 +77,7 @@ const Navbar = () => {
                 // 如果dropdownState为true，显示isVisible的style，否则显示isHidden的
               >
                 <div className="dropdown-item">
-                  <Link to={`/contact/${userID}`}>
+                  <Link to={`/profile/${userID}`}>
                     <div className="dropdown__link">Profile</div>
                   </Link>
                 </div>

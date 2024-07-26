@@ -3,7 +3,7 @@
 2\ 创建前端npm create vite@latest frontend --template react, 选js
 3\ npm install, npm run dev跑前端
 4\去后端server.js, npm init
-5\后端安装express, nodemon -D,把node modules gitignore了
+5\后端安装express, nodemon -D express-fileupload,把node modules gitignore了
 6\试着编辑并启动server(如果端口被占用：lsof -i tcp:端口号，kill -9 id号)
 
 初始化react：
@@ -73,5 +73,7 @@ profile下面再创建profile-info，profile-posts，把profile里的函数copy�
 
 改写redux
 在redux文件夹中的store.js和userdata中配置redux
-到main.js中,从react-redux中导入Provider，把App包裹在provider里
+到main.js中,从react-redux中导入Provider，把store也导入。把App包裹在provider里
 把store挂在provider上
+然后去前端相关文件中导入useDispatch，导入userdata中的saverUserId，定义好它
+在获取数据的函数中dispatch saverUserId

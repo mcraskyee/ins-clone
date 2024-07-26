@@ -1,8 +1,10 @@
 import { useParams } from "react-router-dom";
-import { InfoContainer, Info, Stats, Bio } from "./Profile.styles";
+import { InfoContainer, Info, Stats, Bio, LoadIcon } from "./Profile.styles";
 import { initialState as profileData } from "../../Redux/ProfileData";
 import { initialState as postData } from "../../Redux/PostData";
 import CheckCircle from "@mui/icons-material/CheckCircle";
+import { Fragment, useState } from "react";
+import CreateProfile from "./CreateProfile";
 
 const ProfileInfo = () => {
   const { id } = useParams();
@@ -12,9 +14,18 @@ const ProfileInfo = () => {
   let filteredPosts = postData.filter((post) => {
     return post.userID === id;
   });
+
+  const [profile, setProfile] = useState(null); //默认没有profile
+  const [isProfileCreated, setIsProfileCreated] = useState(false); //默认没有创建profile
+  const [isLoading, setIsLoading] = useState(true); //默认是loading状态
+
+  if (isLoading) {
+    return <LoadIcon>Loading...</LoadIcon>;
+  }
+
   return (
-    <>
-      {profileData[id] ? (
+    <Fragment>
+      {profile ? (
         <InfoContainer>
           <img src={profileData[id].profilePic} alt="profile" />
           <Info>
@@ -46,13 +57,13 @@ const ProfileInfo = () => {
           </Info>
         </InfoContainer>
       ) : (
+        // 如果profile存在，显示以上用户信息
         <InfoContainer>
-          <h2>
-            Sorry, User with id <span>{id}</span> Does not exist!
-          </h2>
+          <CreateProfile userID={id} />
         </InfoContainer>
+        // 如果profile不存在，显示创建profile页面，以上逻辑用三元运算符实现
       )}
-    </>
+    </Fragment>
   );
 };
 
