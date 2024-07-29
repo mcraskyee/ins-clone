@@ -9,7 +9,7 @@ import {
 } from "./Profile.styles";
 import { axiosInstance } from "../../apiConfig";
 
-export default function CreateProfile({ userID }) {
+export default function CreateProfile({ userID, setIsProfileCreated }) {
   const [formData, setFormData] = useState({
     name: "",
     category: "",
@@ -53,6 +53,7 @@ export default function CreateProfile({ userID }) {
         formDataToSubmit,
         { Headers: { "Content-Type": "multipart/form-data" } }
       );
+      setIsProfileCreated(true);
       console.log("profile uploaded successfully", response.data);
     } catch (error) {
       console.error("Error uploading profile: ", error);

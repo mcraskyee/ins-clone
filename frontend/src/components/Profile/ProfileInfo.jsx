@@ -1,10 +1,11 @@
 import { useParams } from "react-router-dom";
 import { InfoContainer, Info, Stats, Bio, LoadIcon } from "./Profile.styles";
-import { initialState as profileData } from "../../Redux/ProfileData";
 import { initialState as postData } from "../../Redux/PostData";
 import CheckCircle from "@mui/icons-material/CheckCircle";
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import CreateProfile from "./CreateProfile";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const ProfileInfo = () => {
   const { id } = useParams();
@@ -19,6 +20,22 @@ const ProfileInfo = () => {
   const [isProfileCreated, setIsProfileCreated] = useState(false); //默认没有创建profile
   const [isLoading, setIsLoading] = useState(true); //默认是loading状态
 
+  //加载用户信息
+  useEffect(() => {
+    const url = `http://localhost:8000/api/profiles/${id}`;
+    axios
+      .get(url)
+      .then((response) => {
+        console.log("res", response.data);
+        setProfile(response.data); //根据id获取用户信息
+        setIsLoading(false); //加载完毕
+      })
+      .catch((error) => {
+        console.error("Error fetching profile: ", error);
+        setIsLoading(false); //失败了也要加载完毕
+      });
+  }, [id, isProfileCreated]);
+
   if (isLoading) {
     return <LoadIcon>Loading...</LoadIcon>;
   }
@@ -27,39 +44,43 @@ const ProfileInfo = () => {
     <Fragment>
       {profile ? (
         <InfoContainer>
-          <img src={profileData[id].profilePic} alt="profile" />
+          <img
+            src={`http://localhost:8000/api/profiles/image/${profile.userID}`}
+            alt="profile picture"
+          />
           <Info>
             {/* 检查认证 */}
             <p className="owner-ID">
-              {profileData[id].userID}
-              {profileData[id].verified ? (
-                <CheckCircle className="verified" />
-              ) : null}
+              {profile.userID}
+              {profile.verified ? <CheckCircle className="verified" /> : null}
             </p>
             <Stats>
               <p>
                 <strong>{filteredPosts.length}</strong> Posts
               </p>
               <p>
-                <strong>{profileData[id].followers}</strong> Followers
+                <strong>{profile.followers}</strong> Followers
               </p>
               <p>
-                <strong>{profileData[id].following}</strong> Following
+                <strong>{profile.following}</strong> Following
               </p>
             </Stats>
             <Bio>
               <p className="name">
-                <strong>{profileData[id].name}</strong>
+                <strong>{profile.name}</strong>
               </p>
-              <p className="category">{profileData[id].category}</p>
-              <p>{profileData[id].bio}</p>
+              <p className="category">{profile.category}</p>
+              <p>{profile.bio}</p>
             </Bio>
           </Info>
         </InfoContainer>
       ) : (
         // 如果profile存在，显示以上用户信息
         <InfoContainer>
-          <CreateProfile userID={id} />
+          <CreateProfile
+            userID={id}
+            setIsProfileCreated={setIsProfileCreated}
+          />
         </InfoContainer>
         // 如果profile不存在，显示创建profile页面，以上逻辑用三元运算符实现
       )}

@@ -4,22 +4,33 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { NavBar, InputField, OtherIcons } from "./Navbar.styles";
 import { Link, useNavigate } from "react-router-dom";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import defaultIcon from "../../assets/images/user.png";
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  const [dropdownState, setDropdownState] = useState(false); //一开始不显示dropdown
+  const navigateTo = useNavigate();
   const searchValue = useRef();
   const userID = useSelector((state) => state.user.userID); //获取userID
-  console.log("userID", userID);
+  const profiles = useSelector((state) => state.profile.profileData); //获取profileData
+  const isProfileAvailable =
+    profiles.length && profiles.filter((profile) => profile.userID === userID);
+  //如果profileData里面有userID，isProfileAvailable就是true
+
+  const [dropdownState, setDropdownState] = useState(false); //一开始不显示dropdown
+  const [imgPath, setImgPath] = useState(""); //设置图片路径
+
+  useEffect(() => {
+    const url = `http://localhost:8000/api/profiles/image/${userID}`;
+    setImgPath(url); //设置图片路径
+  }, [isProfileAvailable, userID]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const value = searchValue.current.value; //value是userID
     if (!value) return; //如果没有userID，直接返回
-    navigate(`/profile/${value}`); //如果有，跳转到相应userID的profile页面
+    navigateTo(`/profile/${value}`); //如果有，跳转到相应userID的profile页面
   };
 
   const likeBtn = (event) => {
@@ -69,7 +80,12 @@ const Navbar = () => {
               </Link>
             </div>
             <div className="dropdown-menu">
-              <img src="" alt="profile-pic" onClick={handleDropdownClick} />
+              <img
+                src={isProfileAvailable ? imgPath : defaultIcon}
+                //如果isProfileAvailable为true，显示imgPath，否则显示defaultIcon
+                alt="profile-pic"
+                onClick={handleDropdownClick}
+              />
               <div
                 className={`dropdown-items ${
                   dropdownState ? "isVisible" : "isHidden"
