@@ -1,10 +1,12 @@
 import { PostGrid } from "./Profile.styles";
-import { initialState as postData } from "../../Redux/PostData";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
 const ProfilePosts = () => {
   // 获取用户id
   const { id } = useParams();
+  // 获取所有的post数据
+  const postData = useSelector((state) => state.post.postData);
   // 过滤出与id相同的用户
   let filteredPosts = postData.filter((post) => {
     return post.userID === id;

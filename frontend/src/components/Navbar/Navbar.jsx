@@ -14,17 +14,20 @@ const Navbar = () => {
   const searchValue = useRef();
   const userID = useSelector((state) => state.user.userID); //获取userID
   const profiles = useSelector((state) => state.profile.profileData); //获取profileData
-  const isProfileAvailable =
-    profiles.length && profiles.filter((profile) => profile.userID === userID);
+  const currentProfile = profiles.length
+    ? profiles.filter((profile) => profile.userID === userID)
+    : null;
   //如果profileData里面有userID，isProfileAvailable就是true
 
   const [dropdownState, setDropdownState] = useState(false); //一开始不显示dropdown
   const [imgPath, setImgPath] = useState(""); //设置图片路径
 
   useEffect(() => {
-    const url = `http://localhost:8000/api/profiles/image/${userID}`;
-    setImgPath(url); //设置图片路径
-  }, [isProfileAvailable, userID]);
+    if (currentProfile) {
+      const url = `http://localhost:8000/api/profiles/image/${userID}`;
+      setImgPath(url); //设置图片路径
+    }
+  }, [currentProfile, userID]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -81,8 +84,12 @@ const Navbar = () => {
             </div>
             <div className="dropdown-menu">
               <img
-                src={isProfileAvailable ? imgPath : defaultIcon}
-                //如果isProfileAvailable为true，显示imgPath，否则显示defaultIcon
+                src={
+                  currentProfile && currentProfile.length
+                    ? imgPath
+                    : defaultIcon
+                }
+                //如果currentProfile为true并且不为null，显示imgPath，否则显示defaultIcon
                 alt="profile-pic"
                 onClick={handleDropdownClick}
               />

@@ -55,4 +55,19 @@ const createPost = async (req,res) =>{
   }
 }
 
-module.exports = {getAllPosts, createPost};
+const getPostImage = async (req, res) => {
+  try{
+    const id = req.params.id;
+    const post = await Post.findById(id);
+    if (!post || !post.postLink){
+      return res.status(404).json({message: "Image not found"});
+    }
+    res.contentType("image/png");
+    res.send(post.postLink);
+  } catch(error){
+    console.error("Error serving image: ", error);
+    return res.status(500).json({message: "Internal Server Error"});
+  }
+};
+
+module.exports = {getAllPosts, createPost, getPostImage};

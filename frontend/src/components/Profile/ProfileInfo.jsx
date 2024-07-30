@@ -1,6 +1,5 @@
 import { useParams } from "react-router-dom";
 import { InfoContainer, Info, Stats, Bio, LoadIcon } from "./Profile.styles";
-import { initialState as postData } from "../../Redux/PostData";
 import CheckCircle from "@mui/icons-material/CheckCircle";
 import { Fragment, useState, useEffect } from "react";
 import CreateProfile from "./CreateProfile";
@@ -10,6 +9,9 @@ import { useSelector } from "react-redux";
 const ProfileInfo = () => {
   const { id } = useParams();
   console.log("id", id);
+
+  //获取所有的post数据
+  const postData = useSelector((state) => state.post.postData);
 
   // 过滤出与id相同的用户
   let filteredPosts = postData.filter((post) => {
