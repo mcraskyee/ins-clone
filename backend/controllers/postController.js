@@ -70,4 +70,35 @@ const getPostImage = async (req, res) => {
   }
 };
 
-module.exports = {getAllPosts, createPost, getPostImage};
+const updatePosts = async (req, res) => {
+  try{
+    const { id } = req.params;
+    const {likes, isLiked, comments} = req.body;
+    //把id转换成mongoose的ObjectId
+    const postObjectId = new mongoose.Types.ObjectId(id);
+    const updatedFields = {};
+    if (likes !== undefined) {
+      updatedFields.likes = likes;
+    };
+    if (comments !== undefined){
+      updatedFields.comments = comments;
+    }
+    if (isLiked !== undefined){
+      updatedFields.isLiked = isLiked;
+    }
+    const updatedPost = await Post.findOneAndUpdate(
+      {_id: postObjectId},
+      {$set: updatedFields},//用$set更新字段
+      {new: true},
+    );
+    if (!updatedPost){
+      return res.status(404).json({error: "Post not found"});
+    }
+    res.json(updatedPost);
+  } catch (error){
+    console.error("Error updating post data: ", error);
+    return res.status(500).json({message: "Internal Server Error"});
+  }
+};
+
+module.exports = {getAllPosts, createPost, getPostImage, updatePosts};

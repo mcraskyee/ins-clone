@@ -9,10 +9,69 @@ import ChatBubbleOutlineOutlinedIcon from "@mui/icons-material/ChatBubbleOutline
 import TelegramIcon from "@mui/icons-material/Telegram";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import SentimentSatisfiedOutlinedIcon from "@mui/icons-material/SentimentSatisfiedOutlined";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  handleLikeSingleClick,
+  handleLikeDoubleClick,
+} from "../../Redux/PostData";
 
 export default function Post() {
+  const dispatch = useDispatch();
   const allPosts = useSelector((state) => state.post.postData);
+  const userID = useSelector((state) => state.user.userID);
+  const [comment, setComment] = useState(() => "");
+  //comment不能直接用于useState，否则打了一个comment之后，所有comment都会变成这个comment
+  //所以要遍历所有的comment，所以要用useState(() => "")
+
+  const updatePostData = async (id, updatedObj) => {
+    try {
+      const url = `/api/posts/${id}`;
+      await axiosInstance.put(url, updatedObj);
+    } catch (error) {
+      console.log("error updating post data", error);
+    }
+  };
+
+  const handlePostComment = (postData, text) => {
+    let updatedObj = {
+      comments: [...postData["comments"], [userID, text]],
+      isLiked: postData.isLiked,
+      likes: postData.likes,
+    };
+    updatePostData(postData._id, updatedObj);
+    setComment("");
+  };
+
+  const handlePostLikes = (type, postData) => {
+    let updatedPost = { ...postData };
+    let likes = "";
+    if (type === "singleClick") {
+      updatedPost.isLiked = !postData.isLiked;
+      //如果已经点赞过了，再点一次就取消点赞
+      likes = String(
+        parseInt(updatedPost.likes, 10) + (updatedPost.isLiked ? 1 : -1)
+        //对于点赞数，如果已经点赞过了，再点一次就加1，否则减1，取消点赞
+      );
+      updatedPost.likes = likes;
+      dispatch(handleLikeSingleClick(updatedPost));
+    } else if (type === "doubleClick") {
+      updatedPost.isLiked = true;
+      //无论原先是否点赞过，双击点赞都是true
+      likes = String(
+        parseInt(updatedPost.likes, 10) + (postData.isLiked ? 0 : 1)
+        //点赞数，如果已经点赞过了，再点一次就不加1，否则加1
+      );
+      updatedPost.likes = likes;
+      dispatch(handleLikeDoubleClick(updatedPost));
+    }
+    let updatedObj = {
+      isLiked: type === "singleClick" ? !postData.isLiked : true,
+      likes: likes,
+      comments: [...postData.comments],
+    };
+    updatePostData(postData._id, updatedObj);
+  };
+
   return (
     <Container>
       {allPosts && allPosts.length > 0 ? (
@@ -35,7 +94,8 @@ export default function Post() {
                 </div>
                 <MoreHorizIcon />
               </UserInfo>
-              <Media>
+              <Media onDoubleClick={() => handlePostLikes("doubleClick", post)}>
+                {/* 传递参数之后必须写成箭头函数 */}
                 <FavoriteIcon className={`like-post-${post.postID}`} />
                 <img
                   src={`http://localhost:8000/api/posts/image/${post._id}`}
@@ -47,6 +107,7 @@ export default function Post() {
                   <div className="actions">
                     <FavoriteIcon
                       className={`like-icon ${post.isLiked ? "liked" : ""}`}
+                      onClick={() => handlePostLikes("singleClick", post)}
                     />
                     <ChatBubbleOutlineOutlinedIcon />
                     <TelegramIcon />
@@ -67,6 +128,22 @@ export default function Post() {
                     <a href="#">...more</a>
                   </span>
                 </Caption>
+                <Comments></Comments>
+                <CommentInput>
+                  <SentimentSatisfiedOutlinedIcon />
+                  <form>
+                    <input
+                      className={`comment-input-${post.postID}`}
+                      type="text"
+                      placeholder="Add a comment..."
+                      value={comment}
+                      onChange={(e) => setComment(() => e.target.value)}
+                    />
+                  </form>
+                  <a href="#" onClick={() => handlePostComment(post, comment)}>
+                    Post
+                  </a>
+                </CommentInput>
               </PostInfo>
             </UserPost>
           );
