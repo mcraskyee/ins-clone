@@ -1,23 +1,23 @@
 const Post = require("../models/Post");
 const mongoose = require("mongoose");
 
-const getAllPosts = async (req, res) => {
+const getAllPosts = (req, res) => {
   Post.find({})
-  .then((posts)=>{
-    if (!posts){
-      return res.status(404).json({message: "No posts found"});
-    }
-    return res.status(200).json(posts);
-  })
-  .catch((error)=>{
-    console.error("Error fetching posts: ", error);
-    return res.status(500).json({message: "Internal Server Error"});
-  });
+    .then((posts) => {
+      if (!posts) {
+        return res.status(404).json({ message: "No post found" });
+      }
+      return res.status(200).json(posts);
+    })
+    .catch((err) => {
+      console.error("Error fetching posts:", err);
+      return res.status(500).json({ message: "Internal server error" });
+    });
 };
 
-const createPost = async (req,res) =>{
+const createPost = async (req, res) => {
   console.log("body", req.body);
-  try{
+  try {
     const {
       userID,
       profilePic,
@@ -27,10 +27,10 @@ const createPost = async (req,res) =>{
       isLiked,
       caption,
       comments,
-      postID} = req.body;
+      postID,
+    } = req.body;
     const postLink = req.files.postLink.data;
-
-    //创建新的post
+    //create a new post document
     const newPost = new Post({
       userID,
       profilePic,
@@ -40,65 +40,63 @@ const createPost = async (req,res) =>{
       likes,
       isLiked,
       caption,
-      comments,
+      comments: JSON.parse(comments),
       postID,
     });
-    //保存post到数据库，返回
+    //save the new post document to the db
     await newPost.save();
-    return res.status(201).json({
-      message: "Post created successfully", 
-      post: newPost
-    });
-  } catch (error){
-    console.error("Error in create post: ", error);
-    return res.status(500).json({message: "Internal Server Error"});
+    res
+      .status(201)
+      .json({ message: "Post created sucessfully", post: newPost });
+  } catch (error) {
+    console.error("Error creating posts:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
-}
+};
 
 const getPostImage = async (req, res) => {
-  try{
+  try {
     const id = req.params.id;
     const post = await Post.findById(id);
-    if (!post || !post.postLink){
-      return res.status(404).json({message: "Image not found"});
+    if (!post || !post.postLink) {
+      return res.status(404).json({ message: "Image not found" });
     }
     res.contentType("image/png");
     res.send(post.postLink);
-  } catch(error){
-    console.error("Error serving image: ", error);
-    return res.status(500).json({message: "Internal Server Error"});
+  } catch (error) {
+    console.error("Error serving image:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
 
 const updatePosts = async (req, res) => {
-  try{
+  try {
     const { id } = req.params;
-    const {likes, isLiked, comments} = req.body;
-    //把id转换成mongoose的ObjectId
+    const { likes, isLiked, comments } = req.body;
+    //convert id to ObjectId
     const postObjectId = new mongoose.Types.ObjectId(id);
     const updatedFields = {};
     if (likes !== undefined) {
       updatedFields.likes = likes;
-    };
-    if (comments !== undefined){
+    }
+    if (comments !== undefined) {
       updatedFields.comments = comments;
     }
-    if (isLiked !== undefined){
+    if (isLiked !== undefined) {
       updatedFields.isLiked = isLiked;
     }
     const updatedPost = await Post.findOneAndUpdate(
-      {_id: postObjectId},
-      {$set: updatedFields},//用$set更新字段
-      {new: true},
+      { _id: postObjectId },
+      { $set: updatedFields }, // use $set to update specific fields
+      { new: true }
     );
-    if (!updatedPost){
-      return res.status(404).json({error: "Post not found"});
+    if (!updatedPost) {
+      return res.status(404).json({ error: "Post not found" });
     }
     res.json(updatedPost);
-  } catch (error){
-    console.error("Error updating post data: ", error);
-    return res.status(500).json({message: "Internal Server Error"});
+  } catch (error) {
+    console.error("Error updating post data:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
-
-module.exports = {getAllPosts, createPost, getPostImage, updatePosts};
+module.exports = { getAllPosts, createPost, getPostImage, updatePosts };

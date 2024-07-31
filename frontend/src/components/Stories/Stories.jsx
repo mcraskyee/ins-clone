@@ -1,4 +1,6 @@
 import React from "react";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 import { useState, useEffect } from "react";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -12,6 +14,7 @@ export default function Stories() {
   function handleResize() {
     setWidth(window.innerWidth);
   }
+  //以下是固定写法，用于设置左右箭头
   const PrevArrow = ({ currentSlide, slideCount, ...arrowProps }) => (
     <ArrowBackIosIcon {...arrowProps} />
   );
@@ -22,6 +25,7 @@ export default function Stories() {
   useEffect(() => {
     window.addEventListener("resize", handleResize);
   });
+  //以下是固定写法，用于设置左右箭头
   const settings = {
     dots: false,
     infinite: false,
