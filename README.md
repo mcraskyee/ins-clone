@@ -9,11 +9,11 @@ Developed a full-stack web application inspired by Instagram
 
 ## Getting Started
 1. **Installation**
-  cd ins-clone
+  cd ins-clone/frontend
   npm install
 
 2. **Running the application**
-  npm run dev
+  npm run dev - frontend
 
 
 ## React + Vite
